@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { KeyboardArrowRight } from "@material-ui/icons";
 import { useHistory } from "react-router";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const useStyles = makeStyles({
   field: {
@@ -23,8 +24,8 @@ const useStyles = makeStyles({
     display: "block",
   },
   spinner: {
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
 
 export default function Create() {
@@ -36,7 +37,9 @@ export default function Create() {
   const [titleError, setTitleError] = useState(false);
   const [detailsError, setDetailsError] = useState(false);
   const [category, setCategory] = useState("todos");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+
+  const { user } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,17 +53,18 @@ export default function Create() {
 
     if (title && details) {
       try {
-        setLoading(true)
+        setLoading(true);
         await axios.post("http://localhost:8000/notes", {
           title: title,
           details: details,
           category: category,
+          uid: user.uid,
         });
-        setLoading(false)
+        setLoading(false);
         history.push("/");
       } catch (error) {
         console.log(error);
-        setLoading(false)
+        setLoading(false);
       }
     }
   };
@@ -124,7 +128,13 @@ export default function Create() {
           endIcon={<KeyboardArrowRight />}
           disabled={loading ? true : null}
         >
-          {loading && <CircularProgress color="inherit" size={20} className={classes.spinner} />}
+          {loading && (
+            <CircularProgress
+              color="inherit"
+              size={20}
+              className={classes.spinner}
+            />
+          )}
           Submit
         </Button>
       </form>

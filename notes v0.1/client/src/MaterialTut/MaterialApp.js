@@ -1,8 +1,9 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Switch } from "react-router-dom";
 import Create from "./components/Create";
 import Layout from "./components/Layout";
 import Notes from "./components/Notes";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function MaterialApp() {
   return (
@@ -10,8 +11,10 @@ export default function MaterialApp() {
       <BrowserRouter>
         <Layout>
           <Switch>
-            <Route exact path="/create" component={Create} />
-            <Route path="/" component={Notes} />
+            <PrivateRoute exact path="/create" component={Create} />
+            {/* <Route exact path="/create" component={Create} /> */}
+            <PrivateRoute path="/" component={Notes} />
+            {/* <Route path="/" component={Notes} /> */}
           </Switch>
         </Layout>
       </BrowserRouter>

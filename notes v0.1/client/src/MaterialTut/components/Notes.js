@@ -4,6 +4,7 @@ import NoteCard from "./NoteCard";
 import Masonry from "react-masonry-css";
 import axios from "axios";
 import Skeleton from "react-loading-skeleton";
+import { useAuth } from "../hooks/useAuth";
 
 const useStyles = makeStyles({
   svg: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles({
   container: {
     maxWidth: 1200,
     height: "calc(100vh - 112px)",
-    overflow: 'auto'
+    overflow: "auto",
   },
 });
 
@@ -31,6 +32,7 @@ export default function Notes() {
   const classes = useStyles();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const deleteHandler = async (_id) => {
     try {
@@ -49,7 +51,7 @@ export default function Notes() {
     try {
       axios({
         method: "get",
-        url: `http://localhost:8000/notes/`,
+        url: `http://localhost:8000/notes/${user.uid}`,
       }).then((res) => {
         setLoading(false);
         if (res.data.length !== 0) {
@@ -59,7 +61,7 @@ export default function Notes() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [user.uid]);
 
   const breakpoints = {
     default: 3,
@@ -71,13 +73,13 @@ export default function Notes() {
     <Container className={classes.container}>
       {loading ? (
         <Grid container spacing={5} justify="space-between">
-          <Grid item xs={12} sm={6} md={4} >
+          <Grid item xs={12} sm={6} md={4}>
             <Skeleton height={200} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} >
+          <Grid item xs={12} sm={6} md={4}>
             <Skeleton height={200} />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} >
+          <Grid item xs={12} sm={6} md={4}>
             <Skeleton height={200} />
           </Grid>
         </Grid>
